@@ -1,0 +1,4 @@
+telegrambot/
+__pycache__/
+.env
+*.pyc
