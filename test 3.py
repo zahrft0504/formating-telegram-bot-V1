@@ -5,7 +5,9 @@ from huggingface_hub import InferenceClient
 import nest_asyncio
 nest_asyncio.apply()
 
-from telegram import Update
+from flask import Flask, request #for webhook handling
+
+from telegram import Update, Bot
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 import logging
 
@@ -16,6 +18,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
+bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')  # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
@@ -31,6 +34,37 @@ HF_MODEL = 'meta-llama/Meta-Llama-3-8B-Instruct'
 client = InferenceClient(
     api_key=HF_API_KEY,
 )
+
+# Flask app for webhook
+app = Flask(__name__)
+
+@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), bot)
+
+    if update.message and update.message.text:
+        user_input = update.message.text
+
+        # Hugging Face inference
+        response = client.text_generation(
+            model=HF_MODEL,
+            inputs=user_input,
+            max_new_tokens=100
+        )
+
+        # Send the reply back
+        bot.send_message(
+            chat_id=update.message.chat.id,
+            text=response[0]["generated_text"]
+        )
+
+    return "ok"
+
+# Run app
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Render sets PORT automatically
+    app.run(host="0.0.0.0", port=port)
+
 # Your existing LLM prompt for extracting job details
 
 EXTRACTION_PROMPT = """
@@ -233,3 +267,4 @@ if __name__ == '__main__':
     import asyncio
     asyncio.get_event_loop().run_until_complete(main())
 
+bot.set_webhook(url="https://your-render-service.onrender.com/YOUR_ENDPOINT")
