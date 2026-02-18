@@ -2,7 +2,6 @@
 # !pip install nest_asyncio
 
 from huggingface_hub import InferenceClient
-from huggingface_hub import InferenceClient
 import nest_asyncio
 nest_asyncio.apply()
 
@@ -12,24 +11,26 @@ import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
+import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
-TELEGRAM_TOKEN = '8502326932:AAGPmQ-qzi8HTLxEYEBLXS_F9S89gtGLtcM'
-HF_API_KEY = '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'  # Your Hugging Face API key
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')  # Use environment variable for security
+HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
+if not HF_API_KEY:
+    raise ValueError("No HF_API_KEY set")
 #HF_MODEL = 'zai-org/GLM-4.7-Flash:novita'  # Free model
 #HF_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 HF_MODEL = 'meta-llama/Meta-Llama-3-8B-Instruct'                                       
 
 # Initialize Hugging Face client
-import os
-os.environ["HF_TOKEN"] = HF_API_KEY
+
+#os.environ["HF_API_TOKEN"] = HF_API_KEY
+#os.environ["TELEGRAM_TOKEN"] = TELEGRAM_TOKEN
 client = InferenceClient(
-    provider="hf-inference",
     api_key=HF_API_KEY,
 )
-#client = InferenceClient(
-#    api_key=os.environ['HF_API_KEY'],
-#)
 # Your existing LLM prompt for extracting job details
 
 EXTRACTION_PROMPT = """
@@ -160,7 +161,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         import asyncio
         from huggingface_hub import InferenceClient
-        client = InferenceClient()
+        client = InferenceClient(api_key=HF_API_KEY)
         logging.info("✅ HuggingFace client initialized successfully")
 
         completion = client.chat.completions.create(
