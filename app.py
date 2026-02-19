@@ -43,7 +43,7 @@ def health():
 application = None
 event_loop = None
 
-@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
+#@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
 @app.route(f"/webhook/{TELEGRAM_TOKEN}", methods=["POST"])
 def webhook():
     global application, event_loop
@@ -282,6 +282,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
