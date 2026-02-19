@@ -55,6 +55,10 @@ def webhook():
     asyncio.run_coroutine_threadsafe(application.process_update(update), event_loop)
 
     return "ok", 200
+    @app.get("/")
+    def health():
+    return "OK", 200
+
 
 # Run app
 if __name__ == "__main__":
@@ -277,3 +281,4 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
