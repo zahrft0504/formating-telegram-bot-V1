@@ -37,28 +37,24 @@ client = InferenceClient(
 
 # Flask app for webhook
 app = Flask(__name__)
+application = None
+event_loop = None
 
 @app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
+@app.route(f"/webhook/{TELEGRAM_TOKEN}", methods=["POST"])
 def webhook():
-    update = Update.de_json(request.get_json(force=True), bot)
+    global application, event_loop
 
-    if update.message and update.message.text:
-        user_input = update.message.text
+    if application is None or event_loop is None:
+        return "Bot not ready", 503
 
-        # Hugging Face inference
-        response = client.text_generation(
-            model=HF_MODEL,
-            inputs=user_input,
-            max_new_tokens=100
-        )
+    data = request.get_json(force=True)
+    update = Update.de_json(data, application.bot)
 
-        # Send the reply back
-        bot.send_message(
-            chat_id=update.message.chat.id,
-            text=response[0]["generated_text"]
-        )
+    # Run handler processing inside PTB's asyncio loop
+    asyncio.run_coroutine_threadsafe(application.process_update(update), event_loop)
 
-    return "ok"
+    return "ok", 200
 
 # Run app
 if __name__ == "__main__":
@@ -243,6 +239,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
 
 async def main():
+    global application
     logging.info("Starting bot...")
     
     # Build the application
@@ -259,12 +256,24 @@ async def main():
     
     logging.info("Bot is ready to receive messages")
     
-    # Start polling
-    await application.run_polling(stop_signals=[])
+    await application.start()
+    print("PTB started (webhook mode).")
+    await asyncio.Event().wait()
 
-# Run the bot directly without asyncio.run()
-if __name__ == '__main__':
-    import asyncio
-    asyncio.get_event_loop().run_until_complete(main())
 
-bot.set_webhook(url="https://your-render-service.onrender.com/YOUR_ENDPOINT")
+import threading
+
+def run_ptb():
+    global event_loop
+    event_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(event_loop)
+    event_loop.run_until_complete(main())
+
+if __name__ == "__main__":
+    # Start PTB (python-telegram-bot) in background
+    t = threading.Thread(target=run_ptb, daemon=True)
+    t.start()
+
+    # Start Flask web server (required for Render)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
