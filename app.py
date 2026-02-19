@@ -38,8 +38,8 @@ client = InferenceClient(
 # Flask app for webhook
 app = Flask(__name__)
 @app.get("/")
-    def health():
-        return "OK", 200
+def health():
+    return "OK", 200
 application = None
 event_loop = None
 
@@ -282,6 +282,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
