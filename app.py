@@ -45,7 +45,7 @@ event_loop = None
 BOT_READY = False
 
 #@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
-@app.route(f"/webhook/{TELEGRAM_TOKEN}")
+@app.route(f"/webhook/{TELEGRAM_TOKEN}", methods=["POST"] )
 def webhook():
     global application, event_loop, BOT_READY
     
@@ -290,6 +290,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
