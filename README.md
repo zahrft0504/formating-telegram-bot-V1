@@ -10,3 +10,6 @@ This code is completely reliant on the "prompt" you have to really refine the pr
 
 feel free to adjust the prompt to achieve any form of text manipulation you want.
 
+you can host this locally via the local.py file but i find that it's most useful when hosted (as a web service on render).
+
+I will do a V2 soon where scheduling is going to be automatic as well with a /schedule date , time command.
