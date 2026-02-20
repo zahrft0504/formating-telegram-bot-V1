@@ -115,7 +115,7 @@ Definitions:
 - requirements:
  Key opportunity requirements mentioned in the job post. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. 
 - benefits:
- Key benefits or perks mentioned in the job post. If non are found, put "Competitive Salary"
+ Key benefits or perks mentioned in the job post. If none are found, put "Competitive Salary"
 
 - link: URL to the job post or application page.
 Job Post:
@@ -285,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
