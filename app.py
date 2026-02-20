@@ -288,8 +288,9 @@ if __name__ == "__main__":
     t.start()
 
     # Start Flask web server (required for Render)
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
