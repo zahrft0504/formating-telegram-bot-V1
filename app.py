@@ -2,7 +2,7 @@
 # !pip install nest_asyncio
 
 from huggingface_hub import InferenceClient
-import nest_asyncio
+#import nest_asyncio
 nest_asyncio.apply()
 import asyncio
 
@@ -199,8 +199,8 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔍 Extracting job details... This may take a moment.")
     
     try:
-        import asyncio
-        from huggingface_hub import InferenceClient
+        #import asyncio
+        #from huggingface_hub import InferenceClient
         client = InferenceClient(api_key=HF_API_KEY)
         logging.info("✅ HuggingFace client initialized successfully")
 
@@ -289,6 +289,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
