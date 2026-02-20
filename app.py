@@ -42,16 +42,22 @@ def health():
     return "OK", 200
 application = None
 event_loop = None
+BOT_READY = False
 
 #@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
-@app.route(f"/webhook/{TELEGRAM_TOKEN}", methods=["POST"])
+@app.route(f"/webhook/{TELEGRAM_TOKEN}")
 def webhook():
-    global application, event_loop
+    global application, event_loop, BOT_READY
+    
+    data = request.get_json(silent=True)
+    if not data:
+        return "ok", 200
 
-    if application is None or event_loop is None:
-        return "Bot not ready", 503
+    # If bot not ready yet, don't 503 (Telegram will retry and pile up)
+    if not BOT_READY or application is None or event_loop is None:
+        return "ok", 200
 
-    data = request.get_json(force=True)
+    
     update = Update.de_json(data, application.bot)
 
     # Run handler processing inside PTB's asyncio loop
@@ -244,7 +250,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
 
 async def main():
-    global application
+    global application, BOT_READY
     logging.info("Starting bot...")
     
     # Build the application
@@ -262,6 +268,8 @@ async def main():
     logging.info("Bot is ready to receive messages")
     
     await application.start()
+    BOT_READY = True
+    print("✅ PTB started and ready (webhook mode).")
     print("PTB started (webhook mode).")
     await asyncio.Event().wait()
 
@@ -280,8 +288,9 @@ if __name__ == "__main__":
     t.start()
 
     # Start Flask web server (required for Render)
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
