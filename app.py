@@ -68,9 +68,7 @@ def webhook():
 
 
 # Run app
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render sets PORT automatically
-    app.run(host="0.0.0.0", port=port)
+
 
 # Your existing LLM prompt for extracting job details
 
@@ -290,6 +288,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
