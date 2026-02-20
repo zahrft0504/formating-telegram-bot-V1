@@ -113,9 +113,9 @@ Definitions:
     Online Training Program
     Full Time
 - requirements:
- Key opportunity requirements mentioned in the job post if stressed, otherwise leave empty. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. keep at a maximum of 2-3 requirements if mentioned, otherwise leave empty.
+ Key opportunity requirements mentioned in the job post if stressed, otherwise leave empty. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
 - benefits:
- Key benefits or perks mentioned in the job post if stressed, otherwise leave empty.
+ Key benefits or perks mentioned in the job post if stressed, otherwise leave empty. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
 
 - link: URL to the job post or application page.
 Job Post:
@@ -285,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
