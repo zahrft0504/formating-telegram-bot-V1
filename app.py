@@ -21,7 +21,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
 bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-FOOTER = os.getenv("FOOTER", "")      # Use environment variable for security
+FOOTER = os.getenv("FOOTER", )      # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
     raise ValueError("No HF_API_KEY set")
@@ -218,7 +218,6 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
         # Parse the JSON-like response (basic parsing for demo)
-        # In production, you'd want to use proper JSON parsing
         formatted_post = TELEGRAM_FORMAT_TEMPLATE.format(
     opportunitytype=data.get("opportunitytype", "Position"),
     target_group=data.get("target_group", "Level"),
@@ -228,7 +227,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     requirements=data.get("requirements", "Requirements"),
     benefits=data.get("benefits", "Benefits"),
     link=data.get("link", "Link"),
-    footer=os.getenv('FOOTER', 'FOOTER')  # Add footer from environment variable
+    footer=os.getenv("FOOTER", "FOOTER")  # Add footer from environment variable
 )
 
         
@@ -286,4 +285,5 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
