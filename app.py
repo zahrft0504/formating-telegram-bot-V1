@@ -20,7 +20,8 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
 bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
-TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')  # Use environment variable for security
+TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
+footer=os.getenv('FOOTER')        # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
     raise ValueError("No HF_API_KEY set")
@@ -285,6 +286,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
