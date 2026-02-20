@@ -4,6 +4,7 @@
 from huggingface_hub import InferenceClient
 import nest_asyncio
 nest_asyncio.apply()
+import asyncio
 
 from flask import Flask, request #for webhook handling
 
@@ -288,6 +289,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
