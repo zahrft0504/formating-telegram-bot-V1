@@ -227,7 +227,8 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sector=data.get("sector", "Description"),
     requirements=data.get("requirements", "Requirements"),
     benefits=data.get("benefits", "Benefits"),
-    link=data.get("link", "Link")
+    link=data.get("link", "Link"),
+    footer=os.getenv('FOOTER', 'FOOTER')  # Add footer from environment variable
 )
 
         
@@ -285,25 +286,3 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
