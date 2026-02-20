@@ -76,13 +76,12 @@ Your task is to extract structured information from the job post below.
 
 You MUST follow these rules strictly:
 
-1. Return ONLY plain text.
+1. for requirements and benefits: they should be in bullet points format and a maximum of 2-3 point each and a minumum of 1. Do not leave empty.
 2. Do NOT return JSON.
 3. Do NOT add explanations.
-4. Do NOT add bullet points.
-5. Do NOT add extra text before or after.
-6. Output EXACTLY 8 lines.
-7. Each line must follow this format:
+4. Do NOT add extra text before or after.
+5. Output EXACTLY 8 lines.
+6. Each line must follow this format:
    key|||value
 
 The keys MUST appear in this exact order:
@@ -114,9 +113,9 @@ Definitions:
     Online Training Program
     Full Time
 - requirements:
- Key opportunity requirements mentioned in the job post if stressed, otherwise leave empty. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
+ Key opportunity requirements mentioned in the job post if stressed. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. 
 - benefits:
- Key benefits or perks mentioned in the job post if stressed, otherwise leave empty. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
+ Key benefits or perks mentioned in the job post if stressed.
 
 - link: URL to the job post or application page.
 Job Post:
@@ -128,7 +127,7 @@ TELEGRAM_FORMAT_TEMPLATE = """ New ** #{opportunitytype}** opportunity for **{ta
 🏢 {company}
 📍 {location}
 
-requirements:
+Requirements:
 {requirements}
 
 Benefits:
@@ -286,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
