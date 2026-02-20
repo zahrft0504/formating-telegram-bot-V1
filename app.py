@@ -266,6 +266,7 @@ async def main():
     print("✅ PTB started and ready (webhook mode).")
     print("PTB started (webhook mode).")
     await asyncio.Event().wait()
+    logging.info("bot is working...")
 
 
 import threading
@@ -284,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
