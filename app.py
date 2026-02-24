@@ -93,7 +93,7 @@ target_group|||
 opportunitytype|||
 requirements|||
 benefits|||
-link|||
+How to Apply|||
 
 If a value is unknown, leave it empty after the delimiter.
 
@@ -133,7 +133,7 @@ Requirements:
 Benefits:
 {benefits}
 
-🔗 Apply here: {link}
+🔗 How to Apply: {how_to_apply}
 -----------------------
 {FOOTER}
 -----------------------"""
@@ -226,7 +226,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sector=data.get("sector", "Description"),
     requirements=data.get("requirements", "Requirements"),
     benefits=data.get("benefits", "Benefits"),
-    link=data.get("link", "Link"),
+    how_to_apply=data.get("How to Apply", "how_to_apply"),
     FOOTER=os.getenv("FOOTER", "FOOTER")  # Add footer from environment variable
 )
 
@@ -285,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
