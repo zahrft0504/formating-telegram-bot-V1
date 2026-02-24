@@ -117,7 +117,7 @@ Definitions:
 - benefits:
  Key benefits or perks mentioned in the job post. If none are found, put "Competitive Salary"
 
-- link: URL to the job post or application page.
+- How to Apply: URL to the job post, application page link, or instructions on how to apply if mentioned (could be recruiter email, application link, or instructions like "apply through our website", etc.)
 Job Post:
 {job_post}
 """
@@ -285,6 +285,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
