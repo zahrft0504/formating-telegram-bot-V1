@@ -19,6 +19,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
 bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
+footer=os.getenv('FOOTER')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')  # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
@@ -108,9 +109,9 @@ Definitions:
     Online Training Program
     Full Time
 - requirements:
- Key opportunity requirements mentioned in the job post if stressed, otherwise leave empty. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. keep at a maximum of 2-3 requirements if mentioned, otherwise leave empty.
+ Key opportunity requirements mentioned in the job post if stressed, otherwise leave empty. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
 - benefits:
- Key benefits or perks mentioned in the job post if stressed, otherwise leave empty.
+ Key benefits or perks mentioned in the job post if stressed, otherwise leave empty. It should be in bullet point format and a maximum of 2-3 requirements if mentioned, otherwise leave empty.
 
 - link: URL to the job post or application page.
 Job Post:
@@ -130,7 +131,7 @@ Benefits:
 
 🔗 Apply here: {link}
 -----------------------
-Subscribe to the channel for new opportunities! https://t.me/investproinmena
+{footer}
 -----------------------"""
 
 
