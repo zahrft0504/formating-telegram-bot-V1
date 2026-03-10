@@ -30,9 +30,6 @@ if not HF_API_KEY:
 HF_MODEL = 'meta-llama/Meta-Llama-3-8B-Instruct'                                       
 
 # Initialize Hugging Face client
-
-#os.environ["HF_API_TOKEN"] = HF_API_KEY
-#os.environ["TELEGRAM_TOKEN"] = TELEGRAM_TOKEN
 client = InferenceClient(
     api_key=HF_API_KEY,
 )
@@ -143,9 +140,6 @@ async def test_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"Received /start command from {update.effective_user.first_name}")
     await update.message.reply_text("✅ Bot is working! /start command received.")
 
-async def test_echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logging.info(f"Received text message: {update.message.text}")
-    await update.message.reply_text(f"📝 You said: {update.message.text}")
 
 async def test_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info("Received /help command")
@@ -181,6 +175,38 @@ def parse_model_output(text):
             data[key.strip()] = value.strip() if value.strip() else ""
 
     return data
+
+async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    text = update.message.text or ""
+
+    # If we are waiting for content to schedule
+    if user_id in pending_schedule:
+        dt = pending_schedule.pop(user_id)
+
+        if not CHANNEL_ID:
+            await update.message.reply_text("CHANNEL_ID is not set.")
+            return
+
+        try:
+            await schedule_channel_post(text, dt)
+            dt_display = dt.strftime("%Y-%m-%d %H:%M %Z")
+            save_last(dt_display)
+
+            await update.message.reply_text(
+                    f"✅ Scheduled in Telegram!\n"
+                    f"📌 Last scheduled post: {dt_display}\n"
+                    "Open your channel → Scheduled Messages to view it."
+                )
+
+        except Exception as e:
+                logging.error(f"Failed to schedule via Telethon: {e}")
+                await update.message.reply_text(f"Failed to schedule: {e}")
+
+        return
+
+    # Otherwise: your existing formatting flow
+    await format_job_post(update, context)
 
 
 async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -242,6 +268,48 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logging.error(f"Error processing job post: {e}")
         await update.message.reply_text(f"DEBUG ERROR:\n{str(e)}")
     
+async def schedule_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    # Expect: /schedule YYYY-MM-DD HH:MM
+    if len(context.args) < 2:
+        await update.message.reply_text(
+            "Usage:\n/schedule YYYY-MM-DD HH:MM\nExample:\n/schedule 2026-03-15 18:00"
+        )
+        return
+
+    dt_str = f"{context.args[0]} {context.args[1]}"
+
+    try:
+        cairo = pytz.timezone("Africa/Cairo")
+        dt = cairo.localize(datetime.strptime(dt_str, "%Y-%m-%d %H:%M"))
+    except ValueError:
+        await update.message.reply_text(
+            "Invalid date format.\nUse:\n/schedule YYYY-MM-DD HH:MM"
+        )
+        return
+
+    # store schedule state
+    pending_schedule[user_id] = dt
+
+    await update.message.reply_text(
+        "🕒 Got it.\nNow send the formatted post you want to schedule."
+    )    
+
+
+async def schedule_channel_post(text: str, when_dt: datetime):
+    """
+    when_dt must be timezone-aware datetime.
+    """
+    print("Scheduling via Telethon")
+    entity = await telethon_client.get_entity(CHANNEL_ID)
+
+    # Telethon versions differ: some use schedule=, some schedule_date=
+    try:
+        return await telethon_client.send_message(entity, text, schedule=when_dt)
+    except TypeError:
+        return await telethon_client.send_message(entity, text, schedule_date=when_dt)
+
 
 async def main():
     global application, BOT_READY
@@ -285,6 +353,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
