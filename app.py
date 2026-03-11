@@ -333,7 +333,7 @@ async def main():
     
     await application.start()
     BOT_READY = True
-   )
+   
     await asyncio.Event().wait()
     logging.info("bot is working...")
 
@@ -346,6 +346,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
