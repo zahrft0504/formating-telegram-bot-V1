@@ -189,28 +189,30 @@ pending_schedule = {}
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     text = update.message.text or ""
+
     # If we are waiting for content to schedule
     if user_id in pending_schedule:
         dt = pending_schedule.pop(user_id)
-        logging.info("pending schedule")
+
         if not CHANNEL_ID:
             await update.message.reply_text("CHANNEL_ID is not set.")
             return
 
         try:
             await schedule_channel_post(text, dt)
+
             dt_display = dt.strftime("%Y-%m-%d %H:%M %Z")
             save_last(dt_display)
-            logging.info(" waiting for formatted text")
+
             await update.message.reply_text(
-                    f"✅ Scheduled in Telegram!\n"
-                    f"📌 Last scheduled post: {dt_display}\n"
-                    "Open your channel → Scheduled Messages to view it."
-                )
+                f"✅ Scheduled in Telegram!\n"
+                f"📌 Last scheduled post: {dt_display}\n"
+                "Open your channel → Scheduled Messages to view it."
+            )
 
         except Exception as e:
-                logging.error(f"Failed to schedule via Telethon: {e}")
-                await update.message.reply_text(f"Failed to schedule: {e}")
+            logging.error(f"Failed to schedule via Telethon: {e}")
+            await update.message.reply_text(f"Failed to schedule: {e}")
 
         return
 
@@ -362,6 +364,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
