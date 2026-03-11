@@ -337,14 +337,22 @@ async def main():
     await asyncio.Event().wait()
     logging.info("bot is working...")
 
+import threading
+
+def run_ptb():
+    global event_loop
+    event_loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(event_loop)
+    event_loop.run_until_complete(main())
 
 if __name__ == "__main__":
     # Start PTB (python-telegram-bot) in background
-    
-
+    t = threading.Thread(target=run_ptb, daemon=True)
+    t.start()
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
