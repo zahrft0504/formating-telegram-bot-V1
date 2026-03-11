@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
-bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
+#bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 FOOTER = os.getenv("FOOTER", )      # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
@@ -322,7 +322,8 @@ async def main():
     # Add handlers
     application.add_handler(CommandHandler("help", test_help))
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), format_job_post))    
+    application.add_handler(CommandHandler("schedule", schedule_cmd))
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_text))   
     
     # Initialize the application
     logging.info("Initializing application...")
@@ -332,19 +333,10 @@ async def main():
     
     await application.start()
     BOT_READY = True
-    print("✅ PTB started and ready (webhook mode).")
-    print("PTB started (webhook mode).")
+   )
     await asyncio.Event().wait()
     logging.info("bot is working...")
 
-
-import threading
-
-def run_ptb():
-    global event_loop
-    event_loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(event_loop)
-    event_loop.run_until_complete(main())
 
 if __name__ == "__main__":
     # Start PTB (python-telegram-bot) in background
@@ -354,6 +346,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
