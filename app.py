@@ -189,7 +189,6 @@ pending_schedule = {}
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     text = update.message.text or ""
-    pending_schedule = {}
     # If we are waiting for content to schedule
     if user_id in pending_schedule:
         dt = pending_schedule.pop(user_id)
@@ -363,6 +362,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
