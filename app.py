@@ -184,7 +184,18 @@ def parse_model_output(text):
 
     return data
 
+# in-memory state: user_id -> datetime
 pending_schedule = {}
+
+def save_last(dt_str: str):
+    with open(LAST_FILE, "w", encoding="utf-8") as f:
+        json.dump({"last_scheduled": dt_str}, f)
+
+def load_last():
+    if not os.path.exists(LAST_FILE):
+        return None
+    with open(LAST_FILE, "r", encoding="utf-8") as f:
+        return json.load(f).get("last_scheduled")
 
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -364,6 +375,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
