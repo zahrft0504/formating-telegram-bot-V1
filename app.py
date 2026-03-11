@@ -148,10 +148,6 @@ Benefits:
 -----------------------"""
 
 
-async def test_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logging.info(f"Received /start command from {update.effective_user.first_name}")
-    await update.message.reply_text("✅ Bot is working! /start command received.")
-
 
 async def test_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info("Received /help command")
@@ -195,7 +191,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # If we are waiting for content to schedule
     if user_id in pending_schedule:
         dt = pending_schedule.pop(user_id)
-
+        logging.info("pending schedule")
         if not CHANNEL_ID:
             await update.message.reply_text("CHANNEL_ID is not set.")
             return
@@ -204,7 +200,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await schedule_channel_post(text, dt)
             dt_display = dt.strftime("%Y-%m-%d %H:%M %Z")
             save_last(dt_display)
-
+            logging.info(" waiting for formatted text")
             await update.message.reply_text(
                     f"✅ Scheduled in Telegram!\n"
                     f"📌 Last scheduled post: {dt_display}\n"
@@ -300,7 +296,8 @@ async def schedule_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "Invalid date format.\nUse:\n/schedule YYYY-MM-DD HH:MM"
         )
         return
-
+# in-memory state: user_id -> datetime
+pending_schedule = {}
     # store schedule state
     pending_schedule[user_id] = dt
 
@@ -366,6 +363,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
