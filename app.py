@@ -5,8 +5,9 @@ from huggingface_hub import InferenceClient
 import nest_asyncio
 nest_asyncio.apply()
 import asyncio
-import datetime
-import telethon
+from datetime import datetime
+from telethon import TelegramClient
+#from telethon.sessions import StringSession
 import pytz
 from flask import Flask, request #for webhook handling
 from telegram import Update, Bot
@@ -22,7 +23,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
 #bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-FOOTER = os.getenv("FOOTER", )      # Use environment variable for security
+FOOTER = os.getenv("FOOTER","" )      # Use environment variable for security
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
     raise ValueError("No HF_API_KEY set")
@@ -262,7 +263,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             formatted_post + "\n\n" +
             f"#{data.get('location', 'Location').replace(',', '_').replace(' ', '_')} #{data.get('sector', 'Description').replace(',', '_').replace(' ', '_')} #{data.get('target_group', 'Target Group').replace(',', '_').replace(' ', '_')}",
-            parse_mode='HTML'
+            parse_mode='Markdown'
         )
         
     except Exception as e:
@@ -332,6 +333,9 @@ async def main():
     logging.info("Bot is ready to receive messages")
     
     await application.start()
+    await telethon_client.start()
+    me = await telethon_client.get_me()
+    print("Telethon logged in as:", me.username or me.first_name, "bot?", me.bot)
     BOT_READY = True
    
     await asyncio.Event().wait()
@@ -352,6 +356,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
