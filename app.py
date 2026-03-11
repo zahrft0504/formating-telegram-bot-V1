@@ -205,7 +205,7 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await schedule_channel_post(text, dt)
 
             dt_display = dt.strftime("%Y-%m-%d %H:%M %Z")
-            save_last(dt_display)
+            #save_last(dt_display)
 
             await update.message.reply_text(
                 f"✅ Scheduled in Telegram!\n"
@@ -365,6 +365,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
