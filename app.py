@@ -197,30 +197,34 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     text = update.message.text or ""
 
-    # ---- SCHEDULING MODE ----
+    # If we are waiting for content to schedule
     if user_id in pending_schedule:
         dt = pending_schedule.pop(user_id)
 
+        if not CHANNEL_ID:
+            await update.message.reply_text("CHANNEL_ID is not set.")
+            return
+
         try:
             await schedule_channel_post(text, dt)
-
             dt_display = dt.strftime("%Y-%m-%d %H:%M %Z")
             #save_last(dt_display)
 
             await update.message.reply_text(
-                f"✅ Scheduled in Telegram!\n"
-                f"📌 Last scheduled post: {dt_display}"
-            )
+                    f"✅ Scheduled in Telegram!\n"
+                    f"📌 Last scheduled post: {dt_display}\n"
+                    "Open your channel → Scheduled Messages to view it."
+                )
 
         except Exception as e:
-            await update.message.reply_text(f"Failed to schedule: {e}")
+                logging.error(f"Failed to schedule via Telethon: {e}")
+                await update.message.reply_text(f"Failed to schedule: {e}")
 
         return
 
-
-    # ---- NORMAL MODE (FORMAT TEXT) ----
+    # Otherwise: your existing formatting flow
     await format_job_post(update, context)
-
+    
 async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Main function to format job posts"""
     job_post = update.message.text
@@ -240,7 +244,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         completion = client.chat.completions.create(
             model=HF_MODEL,
             messages=[
-                {"role": "system", "content": "You extract structured job data and ALWAYS return valid JSON only."},
+                {"role": "system", "content": "You extract structured job data and ALWAYS return valid data only."},
                 {"role": "user", "content": EXTRACTION_PROMPT.format(job_post=job_post)}
             ],
             max_tokens=500,
@@ -365,6 +369,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
