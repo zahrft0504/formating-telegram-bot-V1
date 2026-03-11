@@ -184,7 +184,7 @@ def parse_model_output(text):
 
     return data
 
-LAST_FILE = "last_scheduled.json"
+#LAST_FILE = "last_scheduled.json"
 
 # in-memory state: user_id -> datetime
 pending_schedule = {}
@@ -365,6 +365,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
