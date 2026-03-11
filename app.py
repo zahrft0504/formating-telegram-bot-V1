@@ -340,12 +340,12 @@ async def main():
 
 if __name__ == "__main__":
     # Start PTB (python-telegram-bot) in background
-    t = threading.Thread(target=run_ptb, daemon=True)
-    t.start()
+    
 
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
