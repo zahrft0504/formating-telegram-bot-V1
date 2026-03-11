@@ -36,10 +36,15 @@ client = InferenceClient(
     api_key=HF_API_KEY,
 )
 
-telethon_client = TelegramClient(StringSession(TG_STRING_SESSION), TG_API_ID, TG_API_HASH)
-async def start_telethon():
-    await telethon_client.start()
-    print("✅ Telethon connected")
+TG_API_ID = int(os.getenv("TG_API_ID"))
+TG_API_HASH = os.getenv("TG_API_HASH")
+s= os.getenv("TG_STRING_SESSION")
+CHANNEL_ID = os.getenv("CHANNEL_ID")  # e.g. "@mychannel"
+print("Length:", len(s))
+print("Starts with:", s[:5])
+print("Ends with:", s[-5:])
+print("Has quotes?", '"' in s)
+telethon_client = TelegramClient(StringSession(s), TG_API_ID, TG_API_HASH)
 
 # Flask app for webhook
 app = Flask(__name__)
@@ -361,6 +366,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
