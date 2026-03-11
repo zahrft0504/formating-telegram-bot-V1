@@ -36,6 +36,11 @@ client = InferenceClient(
     api_key=HF_API_KEY,
 )
 
+telethon_client = TelegramClient(StringSession(TG_STRING_SESSION), TG_API_ID, TG_API_HASH)
+async def start_telethon():
+    await telethon_client.start()
+    print("✅ Telethon connected")
+
 # Flask app for webhook
 app = Flask(__name__)
 @app.get("/")
@@ -356,6 +361,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
