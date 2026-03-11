@@ -201,13 +201,9 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     text = update.message.text or ""
 
-    # If we are waiting for content to schedule
+    # ---- SCHEDULING MODE ----
     if user_id in pending_schedule:
         dt = pending_schedule.pop(user_id)
-
-        if not CHANNEL_ID:
-            await update.message.reply_text("CHANNEL_ID is not set.")
-            return
 
         try:
             await schedule_channel_post(text, dt)
@@ -217,19 +213,17 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             await update.message.reply_text(
                 f"✅ Scheduled in Telegram!\n"
-                f"📌 Last scheduled post: {dt_display}\n"
-                "Open your channel → Scheduled Messages to view it."
+                f"📌 Last scheduled post: {dt_display}"
             )
 
         except Exception as e:
-            logging.error(f"Failed to schedule via Telethon: {e}")
             await update.message.reply_text(f"Failed to schedule: {e}")
 
         return
 
-    # Otherwise: your existing formatting flow
-    await format_job_post(update, context)
 
+    # ---- NORMAL MODE (FORMAT TEXT) ----
+    await format_job_post(update, context)
 
 async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Main function to format job posts"""
@@ -375,6 +369,7 @@ if __name__ == "__main__":
     # Start Flask web server (required for Render)
     port = int(os.environ.get("PORT", 10000)) #5000 last commit
     app.run(host="0.0.0.0", port=port)
+
 
 
 
