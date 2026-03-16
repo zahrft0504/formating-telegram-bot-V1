@@ -277,7 +277,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             formatted_post + "\n\n" +
             f"#{data.get('location', 'Location').replace(',', '_').replace(' ', '_')} #{data.get('sector', 'Description').replace(',', '_').replace(' ', '_')} #{data.get('target_group', 'Target Group').replace(',', '_').replace(' ', '_')}",
-            parse_mode='Markdown'
+            parse_mode='HTML'
         )
         
     except Exception as e:
