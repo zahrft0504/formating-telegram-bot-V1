@@ -253,10 +253,12 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         structured_data = completion.choices[0].message.content.strip()
         print("MODEL RAW OUTPUT:")
+        
         print(structured_data)
         data = parse_model_output(structured_data)
         print("PARSED DATA:")
         print(data)
+        logging.info(data)
 
 
         # Parse the JSON-like response (basic parsing for demo)
