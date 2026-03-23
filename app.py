@@ -58,6 +58,7 @@ BOT_READY = False
 #@app.route(f"/{TELEGRAM_TOKEN}", methods=["POST"])
 @app.route(f"/webhook/{TELEGRAM_TOKEN}", methods=["POST"] )
 def webhook():
+    print("🔥 Webhook hit")
     global application, event_loop, BOT_READY
     
     data = request.get_json(silent=True)
@@ -253,9 +254,10 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         structured_data = completion.choices[0].message.content.strip()
         print("MODEL RAW OUTPUT:")
-        
+        logging.info(f"RAW MODEL OUTPUT:\n{structured_data}")
         print(structured_data)
         data = parse_model_output(structured_data)
+        logging.info(f"PARSED JSON:\n{data}")
         print("PARSED DATA:")
         print(data)
         #logging.info(data)
