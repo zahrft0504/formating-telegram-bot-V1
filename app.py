@@ -23,7 +23,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 # Configuration - REPLACE THESE WITH YOUR ACTUAL VALUES
 #bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))  # Initialize the bot with the token from environment variable
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-FOOTER = os.getenv("FOOTER","" )      # Use environment variable for security
+FOOTER = os.getenv("FOOTER","" )      # Use environment variable for security    
 HF_API_KEY = os.getenv('HF_API_KEY')  # Use environment variable for security
 if not HF_API_KEY:
     raise ValueError("No HF_API_KEY set")
@@ -79,58 +79,7 @@ def webhook():
     
 # Your existing LLM prompt for extracting job details
 
-EXTRACTION_PROMPT = """
-You are a data extraction engine.
-
-Your task is to extract structured information from the job post below.
-
-You MUST follow these rules strictly:
-
-1. for requirements and benefits: they should be in bullet points format and a maximum of 2-3 point each and a minumum of 1. Do not leave empty.
-2. Do NOT return JSON.
-3. Do NOT add explanations.
-4. Do NOT add extra text before or after.
-5. Output EXACTLY 8 lines.
-6. Each line must follow this format:
-   key|||value
-
-The keys MUST appear in this exact order:
-
-company|||
-sector|||
-location|||
-target_group|||
-opportunitytype|||
-requirements|||
-benefits|||
-How to Apply|||
-
-If a value is unknown, leave it empty after the delimiter.
-
-Definitions:
-
-- company: Official company name.
-- sector: Industry category (e.g, Consulting, VC, PE, Banking, Tech, Government, etc.)
-- location: City and country if mentioned.
-- target_group:
-    Students
-    Fresh Graduates
-    Professionals 
-- opportunitytype:
-    COOP (which is a Cooperative Education Program for students)
-    GDP (which is a fresh Graduate Development Program)
-    Part Time
-    Online Training Program
-    Full Time
-- requirements:
- Key opportunity requirements mentioned in the job post. e.g, "must be a student", "at least 1 year of experience", "fresh graduates only", "must have a degree in X", etc. 
-- benefits:
- Key benefits or perks mentioned in the job post. If none are found, put "Competitive Salary"
-
-- How to Apply: URL to the job post, application page link, or instructions on how to apply if mentioned (could be recruiter email, application link, or instructions like "apply through our website", etc.)
-Job Post:
-{job_post}
-"""
+EXTRACTION_PROMPT = os.os.getenv('EXTRACTION_PROMPT')
 
 # Your Telegram channel formatting template
 TELEGRAM_FORMAT_TEMPLATE = """ New ** #{opportunitytype}** opportunity for **{target_group}** in **{sector}** sector !
