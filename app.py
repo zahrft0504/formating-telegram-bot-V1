@@ -79,7 +79,7 @@ def webhook():
     
 # Your existing LLM prompt for extracting job details
 
-EXTRACTION_PROMPT = os.os.getenv('EXTRACTION_PROMPT')
+EXTRACTION_PROMPT = os.getenv('EXTRACTION_PROMPT')
 
 # Your Telegram channel formatting template
 TELEGRAM_FORMAT_TEMPLATE = """ New ** #{opportunitytype}** opportunity for **{target_group}** in **{sector}** sector !
