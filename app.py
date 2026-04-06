@@ -210,7 +210,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print("PARSED DATA:")
         print(data)
         #logging.info(data)
-        reqs = parsed.get("requirements", "")
+        reqs = data.get("requirements", "")
 
         req_list = [r.strip() for r in reqs.split(",") if r.strip()]
 
