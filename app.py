@@ -127,7 +127,7 @@ def parse_model_output(text):
     data = {}
     lines = text.strip().split("\n")
 
-    for line in output.split("\n"):
+    for line in lines:
         if "|||" in line:
             key, value = line.split("|||", 1)
             parsed[key.strip()] = value.strip()
