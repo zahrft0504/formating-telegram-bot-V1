@@ -210,6 +210,15 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print("PARSED DATA:")
         print(data)
         #logging.info(data)
+        reqs = parsed.get("requirements", "")
+
+        req_list = [r.strip() for r in reqs.split(",") if r.strip()]
+
+        # take max 3
+        #req_list = req_list[:3]
+
+        formatted_requirements = "\n".join(
+        [f"{i+1}. {req}" for i, req in enumerate(req_list)])
 
 
         # Parse the JSON-like response (basic parsing for demo)
@@ -219,7 +228,7 @@ async def format_job_post(update: Update, context: ContextTypes.DEFAULT_TYPE):
     company=data.get("company", "Company"),
     location=data.get("location", "Location"),
     sector=data.get("sector", "Description"),
-    requirements=data.get("requirements", "Requirements"),
+    requirements=data.get("requirements", "formatted_requirements"),
     benefits=data.get("benefits", "Benefits"),
     how_to_apply=data.get("How to Apply", "how_to_apply"),
     FOOTER=os.getenv("FOOTER", "FOOTER")  # Add footer from environment variable
